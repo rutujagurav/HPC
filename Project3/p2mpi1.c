@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #define MIN(a,b)  ((a)<(b)?(a):(b))
-//part2
+//part2newest
 // Defining Block Low, Block High and Block Size
 
 #define BLOCK_LOW(id, p, n) ((id)*(n)/(p))
