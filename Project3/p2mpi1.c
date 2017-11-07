@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     //int *arrA = (int*)calloc(pow(10,10),sizeof(int));
     double elapsed_time;
     int id, index,p,count;
-    unsigned long long int y,z,n,low_value, global_count, high_value, size, proc0_size,i,prime,first;
+    unsigned long long int y,z,n,low_value, global_count, high_value, size, proc0_size,i,prime,first,j;
     unsigned long long int local_first, local_low_value, local_high_value, local_size;
 	char *local_marked;
 	char *marked;
@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
     for (i = 0; i < size; i++){
         marked[i] = 0;
     }
-	for (i = 0; i < local_size; i++){
-        local_marked[i] = 0;
+	for (j = 0; j < local_size; j++){
+        local_marked[j] = 0;
     }
 	
     //if (!id) index = 0;
@@ -103,22 +103,23 @@ int main(int argc, char *argv[])
             marked[i] = 1;
         }
 		
+		
+		if (!id) {
+			while (marked[++index]);
+	
+			prime = 2 * index + 3;
+        }
+		
 		if(id){
 			local_first = (prime * prime - local_low_value) / 2;
-			for (i = local_first; i < local_size; i+=prime){
-				local_marked[i] = 1;
+			for (j = local_first; j < local_size; j+=prime){
+				local_marked[j] = 1;
 			}	
 			while (local_marked[++index]);
 				
 			prime = 2 * index + 3;	
 			
 		}	
-		
-        if (!id) {
-			while (marked[++index]);
-	
-			prime = 2 * index + 3;
-        }
         //if(p>1)
                 //MPI_Bcast(&prime,  1, MPI_INT, 0, MPI_COMM_WORLD);
     }while (prime * prime <= n);
@@ -129,6 +130,7 @@ int main(int argc, char *argv[])
             count++;
         }
     }
+	printf("Count = %d",count);
 	if(p>1){
 		MPI_Reduce (&count, &global_count, 1, MPI_INT, MPI_SUM,0, MPI_COMM_WORLD);
     }
